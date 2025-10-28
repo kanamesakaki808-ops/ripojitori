@@ -2,59 +2,47 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>すずメモ</title>
 <style>
-body {
-  font-family: sans-serif;
-  margin: 2em;
-  background: #fffaf0;
-}
-textarea {
-  width: 100%;
-  height: 200px;
-  font-size: 16px;
-  padding: 8px;
-}
-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background: #ffd700;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-}
-p {
-  margin-top: 10px;
-  color: green;
-}
+body { font-family:sans-serif; margin:20px; }
+textarea { width:100%; height:200px; font-size:16px; padding:8px; }
+button { margin:5px; padding:10px 20px; font-size:16px; }
 </style>
 </head>
 <body>
-<h2>すずメモ</h2>
+<h2>📝 すずメモ</h2>
 <textarea id="memo" placeholder="ここにメモを書いてね"></textarea><br>
-<button onclick="saveMemo()">保存</button>
-<p id="status"></p>
+<button onclick="saveFile()">💾 保存</button>
+<button onclick="clearMemo()">🗑 消去</button>
+<input type="file" id="loadFile" style="display:none;" onchange="loadFile(event)">
+<button onclick="document.getElementById('loadFile').click()">📂 読み込み</button>
 
 <script>
-function saveMemo() {
-  try {
-    var memo = document.getElementById('memo').value;
-    localStorage.setItem('suzumemo', memo);
-    document.getElementById('status').innerText = "✅ 保存しました";
-  } catch (e) {
-    document.getElementById('status').innerText = "⚠️ 保存できませんでした（Safariの設定を確認）";
+function saveFile() {
+  const text = document.getElementById('memo').value;
+  const blob = new Blob([text], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'memo.txt';
+  a.click();
+}
+
+function clearMemo() {
+  if(confirm("本当に消しますか？")) {
+    document.getElementById('memo').value = "";
   }
 }
 
-window.onload = function() {
-  try {
-    var memo = localStorage.getItem('suzumemo');
-    if (memo) document.getElementById('memo').value = memo;
-  } catch (e) {
-    console.log("localStorage無効");
-  }
-};
+function loadFile(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    document.getElementById('memo').value = event.target.result;
+  };
+  reader.readAsText(file);
+}
 </script>
 </body>
 </html>
-
