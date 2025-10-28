@@ -1,78 +1,60 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>すずメモ</title>
-  <style>
-    body {
-      font-family: "Hiragino Kaku Gothic ProN", sans-serif;
-      background: linear-gradient(180deg, #fafafa, #e0e0e0);
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
-    h1 {
-      font-size: 22px;
-      color: #333;
-      margin-bottom: 10px;
-    }
-    textarea {
-      width: 90%;
-      height: 60vh;
-      font-size: 16px;
-      padding: 10px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      resize: none;
-      outline: none;
-      background: #fff;
-    }
-    button {
-      font-size: 16px;
-      padding: 10px 25px;
-      margin: 10px 5px;
-      border: none;
-      border-radius: 10px;
-      background-color: #4CAF50;
-      color: white;
-    }
-    button:hover {
-      background-color: #43a047;
-    }
-    footer {
-      font-size: 12px;
-      color: #666;
-      margin-top: 20px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>すずメモ</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 2em;
+  background: #fffaf0;
+}
+textarea {
+  width: 100%;
+  height: 200px;
+  font-size: 16px;
+  padding: 8px;
+}
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #ffd700;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+p {
+  margin-top: 10px;
+  color: green;
+}
+</style>
 </head>
 <body>
-  <h1>📝 すずメモ</h1>
-  <textarea id="memo" placeholder="ここにメモを書いてね..."></textarea><br>
-  <button onclick="saveMemo()">💾 保存</button>
-  <button onclick="clearMemo()">🗑 消去</button>
+<h2>すずメモ</h2>
+<textarea id="memo" placeholder="ここにメモを書いてね"></textarea><br>
+<button onclick="saveMemo()">保存</button>
+<p id="status"></p>
 
-  <footer>iPhone9.3.6でも動くシンプルメモ</footer>
+<script>
+function saveMemo() {
+  try {
+    var memo = document.getElementById('memo').value;
+    localStorage.setItem('suzumemo', memo);
+    document.getElementById('status').innerText = "✅ 保存しました";
+  } catch (e) {
+    document.getElementById('status').innerText = "⚠️ 保存できませんでした（Safariの設定を確認）";
+  }
+}
 
-  <script>
-    function saveMemo() {
-      const text = document.getElementById("memo").value;
-      localStorage.setItem("suzumemo", text);
-      alert("保存しました！");
-    }
-    function clearMemo() {
-      if (confirm("本当に消しますか？")) {
-        localStorage.removeItem("suzumemo");
-        document.getElementById("memo").value = "";
-      }
-    }
-    window.onload = () => {
-      const saved = localStorage.getItem("suzumemo");
-      if (saved) document.getElementById("memo").value = saved;
-    };
-  </script>
+window.onload = function() {
+  try {
+    var memo = localStorage.getItem('suzumemo');
+    if (memo) document.getElementById('memo').value = memo;
+  } catch (e) {
+    console.log("localStorage無効");
+  }
+};
+</script>
 </body>
 </html>
+
